@@ -12,10 +12,6 @@ export default class Column {
     }
   }
   // returns null, 1 or 2
-  getTokenAt(rowIndex){
-    //if(rowIndex >= this.tokens.length) return null;
-    return this.tokens[rowIndex];
-  }
 
   isFull(){
     return this.tokens.every(ele => ele !== null);

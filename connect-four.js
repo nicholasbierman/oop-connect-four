@@ -1,11 +1,10 @@
-import Column from "./colum.js";
 import Game from "./game.js";
 
 let game = undefined;
 let boardHolder = document.getElementById("board-holder");
 let gameNameDiv = document.getElementById("game-name");
 let clickTargets = document.getElementById("click-targets");
-let columns = new Array(7);
+
 function updateUI() {
   if (game === undefined) {
     boardHolder.classList.add("is-invisible");
@@ -22,28 +21,29 @@ function updateUI() {
     clickTargets.classList.remove("black");
   }
   for (let i = 0; i < 7; i++) {
-    for (let j = 0; j < 6; j++) {
-      let token = columns[i].getTokenAt(j);
-      let cssClass = "";
-      if (token === 1) {
-        cssClass = "red";
-      } else if (token === 2) {
-        cssClass = "black";
+    // if (game.isColumnFull(i)) {
+    //   clickTargets.classList.add("full");
+    // } else {
+      for (let j = 0; j < 6; j++) {
+        let token = game.getTokenAt(j, i);
+        let cssClass = "";
+        if (token === 1) {
+          cssClass = "red";
+        } else if (token === 2) {
+          cssClass = "black";
+        }
+        let div = document.getElementById(`square-${j}-${i}`);
+        if (cssClass !== "") {
+          div.classList.add(cssClass);
+        }
       }
-      let div = document.getElementById(`square-${j}-${i}`);
-      if (cssClass !== '') {
-        div.classList.add(cssClass);
-      }
-    }
+    //}
   }
 }
 window.addEventListener("DOMContentLoaded", (event) => {
   let player1Content = document.getElementById("player-1-name");
   let player2Content = document.getElementById("player-2-name");
   let newGameButton = document.getElementById("new-game");
-  for (let i = 0; i < 7; i++) {
-    columns[i] = new Column();
-  }
 
   function enableNewGameButton() {
     if (player1Content.value !== "" && player2Content.value !== "") {
@@ -69,12 +69,13 @@ window.addEventListener("DOMContentLoaded", (event) => {
 
   clickTargets.addEventListener("click", (event) => {
     let columnIndex = event.target.id.split("-")[1];
-    if(columns[columnIndex].isFull()){
-      event.target.classList.add('full');
+    console.log(columnIndex);
+    if (game.isColumnFull(columnIndex)) {
+      event.target.classList.add("full");
     } else {
       game.playInColumn(columnIndex);
-      columns[columnIndex].add(game.currentPlayer);
-      event.target.classList.remove('full');
+
+      event.target.classList.remove("full");
     }
     updateUI();
   });
