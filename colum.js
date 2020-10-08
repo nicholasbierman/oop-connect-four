@@ -16,4 +16,8 @@ export default class Column {
     //if(rowIndex >= this.tokens.length) return null;
     return this.tokens[rowIndex];
   }
+
+  isFull(){
+    return this.tokens.every(ele => ele !== null);
+  }
 }

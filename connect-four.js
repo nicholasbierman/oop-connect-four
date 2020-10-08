@@ -21,16 +21,16 @@ function updateUI() {
     clickTargets.classList.add("red");
     clickTargets.classList.remove("black");
   }
-  for (let i = 0; i < 6; i++) {
-    for (let j = 0; j < 7; j++) {
-      let token = columns[i].tokens[j];
+  for (let i = 0; i < 7; i++) {
+    for (let j = 0; j < 6; j++) {
+      let token = columns[i].getTokenAt(j);
       let cssClass = "";
       if (token === 1) {
-        cssClass = "black";
-      } else if (token === 2) {
         cssClass = "red";
+      } else if (token === 2) {
+        cssClass = "black";
       }
-      let div = document.getElementById(`square-${i}-${j}`);
+      let div = document.getElementById(`square-${j}-${i}`);
       if (cssClass !== '') {
         div.classList.add(cssClass);
       }

@@ -97,11 +97,11 @@ main {
   width: 65px;
 }
 
-.token.red {
+.token-square.red {
   background-color: red;
 }
 
-.token.black {
+.token-square.black {
   background-color: black;
 }
 
