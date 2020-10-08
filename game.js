@@ -5,7 +5,7 @@ export default class Game {
     this.currentPlayer = 1;
   }
 
-  playInColumn() {
+  playInColumn(columnIndex) {
     if (this.currentPlayer === 1) {
       this.currentPlayer = 2;
     } else {

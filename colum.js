@@ -1,4 +1,4 @@
-export default class Column{
+export default class Column {
   constructor(){
     this.tokens = [null, null, null, null, null, null];
   }

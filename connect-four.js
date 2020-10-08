@@ -1,9 +1,11 @@
+import Column from "./colum.js";
 import Game from "./game.js";
 
 let game = undefined;
 let boardHolder = document.getElementById("board-holder");
 let gameNameDiv = document.getElementById("game-name");
 let clickTargets = document.getElementById("click-targets");
+let columns = new Array(7);
 function updateUI() {
   if (game === undefined) {
     boardHolder.classList.add("is-invisible");
@@ -19,11 +21,29 @@ function updateUI() {
     clickTargets.classList.add("red");
     clickTargets.classList.remove("black");
   }
+  for (let i = 0; i < 6; i++) {
+    for (let j = 0; j < 7; j++) {
+      let token = columns[i].tokens[j];
+      let cssClass = "";
+      if (token === 1) {
+        cssClass = "black";
+      } else if (token === 2) {
+        cssClass = "red";
+      }
+      let div = document.getElementById(`square-${i}-${j}`);
+      if (cssClass !== '') {
+        div.classList.add(cssClass);
+      }
+    }
+  }
 }
 window.addEventListener("DOMContentLoaded", (event) => {
   let player1Content = document.getElementById("player-1-name");
   let player2Content = document.getElementById("player-2-name");
   let newGameButton = document.getElementById("new-game");
+  for (let i = 0; i < 7; i++) {
+    columns[i] = new Column();
+  }
 
   function enableNewGameButton() {
     if (player1Content.value !== "" && player2Content.value !== "") {
@@ -46,8 +66,11 @@ window.addEventListener("DOMContentLoaded", (event) => {
     enableNewGameButton();
     updateUI();
   });
+
   clickTargets.addEventListener("click", (event) => {
-    game.playInColumn();
+    let columnIndex = event.target.id.split("-")[1];
+    game.playInColumn(columnIndex);
+    columns[columnIndex].add(game.currentPlayer);
     updateUI();
   });
 });
