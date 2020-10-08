@@ -8,6 +8,7 @@ export default class Game {
     for (let i = 0; i < 7; i++) {
       this.columns[i] = new Column();
     }
+    this.winnerNumber = 0;
   }
 
   getTokenAt(rowIndex, columnIndex) {
@@ -22,7 +23,20 @@ export default class Game {
       this.currentPlayer = 1;
     }
     this.columns[columnIndex].add(this.currentPlayer);
+    checkForTie.bind(this)();
 
+    function checkForTie(){
+      let everythingIsFull = true;
+      for(let i = 0; i < this.columns.length; i++){
+        if(!this.columns[i].isFull()) everythingIsFull = false;
+      }
+      //if(this.columns.every(ele => {ele.isFull()})){
+      if(everythingIsFull){
+        console.log(`${this.player1Name} ties with ${this.player2Name}`);
+        alert(`${this.player1Name} ties with ${this.player2Name}`);
+        this.winnerNumber = 3;
+      }
+    }
   }
 
   getName() {
