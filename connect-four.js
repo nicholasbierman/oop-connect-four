@@ -69,8 +69,13 @@ window.addEventListener("DOMContentLoaded", (event) => {
 
   clickTargets.addEventListener("click", (event) => {
     let columnIndex = event.target.id.split("-")[1];
-    game.playInColumn(columnIndex);
-    columns[columnIndex].add(game.currentPlayer);
+    if(columns[columnIndex].isFull()){
+      event.target.classList.add('full');
+    } else {
+      game.playInColumn(columnIndex);
+      columns[columnIndex].add(game.currentPlayer);
+      event.target.classList.remove('full');
+    }
     updateUI();
   });
 });

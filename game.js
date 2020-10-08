@@ -16,4 +16,8 @@ export default class Game {
   getName(){
     return `${this.player1Name} vs. ${this.player2Name}`;
   }
+
+  isColumFull(columnIndex){
+    return;
+  }
 }
