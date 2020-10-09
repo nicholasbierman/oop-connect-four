@@ -69,12 +69,11 @@ window.addEventListener("DOMContentLoaded", (event) => {
 
   clickTargets.addEventListener("click", (event) => {
     let columnIndex = event.target.id.split("-")[1];
-    console.log(columnIndex);
+    //console.log(columnIndex);
     if (game.isColumnFull(columnIndex)) {
       event.target.classList.add("full");
     } else {
       game.playInColumn(columnIndex);
-
       event.target.classList.remove("full");
     }
     updateUI();

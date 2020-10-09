@@ -1,3 +1,4 @@
+import ColumnWinInspector from './column-win-inspector.js';
 import Column from './column.js';
 export default class Game {
   constructor(player1Name, player2Name) {
@@ -5,8 +6,10 @@ export default class Game {
     this.player2Name = player2Name;
     this.currentPlayer = 1;
     this.columns = new Array(7);
+    this.columnInpectors = new Array(7);
     for (let i = 0; i < 7; i++) {
       this.columns[i] = new Column();
+      this.columnInpectors[i] = new ColumnWinInspector(this.columns[i]);
     }
     this.winnerNumber = 0;
   }
@@ -24,6 +27,8 @@ export default class Game {
     }
     this.columns[columnIndex].add(this.currentPlayer);
     checkForTie.bind(this)();
+    this.winnerNumber = this.columnInpectors[columnIndex].inspect();
+    console.log(this.winnerNumber)
 
     function checkForTie(){
       let everythingIsFull = true;
@@ -40,10 +45,24 @@ export default class Game {
   }
 
   getName() {
-    return `${this.player1Name} vs. ${this.player2Name}`;
+    let gameStatus = `${this.player1Name} vs. ${this.player2Name}`;
+    if(this.winnerNumber === 1) {
+      gameStatus = `${this.player1Name} wins!`;
+      alert(gameStatus);
+    } else if(this.winnerNumber === 2){
+      gameStatus = `${this.player2Name} wins!`;
+      alert(gameStatus);
+    }
+
+    return gameStatus;
   }
 
   isColumnFull(columnIndex) {
-    return this.columns[columnIndex].isFull();
+    let result = this.columns[columnIndex].isFull();
+    if(this.winnerNumber === 1 || this.winnerNumber === 2){
+      result = true;
+    }
+
+    return result;
   }
 }
