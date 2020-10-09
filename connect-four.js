@@ -5,6 +5,8 @@ let boardHolder = document.getElementById("board-holder");
 let gameNameDiv = document.getElementById("game-name");
 let clickTargets = document.getElementById("click-targets");
 let newGameJustStarted = false;
+let columnToAnimate;
+let timeUnit = 200;
 function updateUI() {
   if (game === undefined) {
     boardHolder.classList.add("is-invisible");
@@ -21,9 +23,7 @@ function updateUI() {
     clickTargets.classList.remove("black");
   }
   for (let i = 0; i < 7; i++) {
-    // if (game.isColumnFull(i)) {
-    //   clickTargets.classList.add("full");
-    // } else {
+    let rowToAnimate = 6;
     for (let j = 0; j < 6; j++) {
       let token = game.getTokenAt(j, i);
       let cssClass = "";
@@ -37,10 +37,11 @@ function updateUI() {
         div.className = "token-square";
       } else {
         if (cssClass !== "") {
-          //animateDrop(div);
-          //div.classList.add(cssClass);
-          animateDrop(j, i, cssClass);
-          setTimeout(addCSSClass, 2000, div, cssClass);
+          if(i === columnToAnimate && j < rowToAnimate){
+            animateDrop(j, i, cssClass);
+            rowToAnimate = j;
+          }
+          setTimeout(addCSSClass, j * timeUnit, div, cssClass);
         }
       }
     }
@@ -51,27 +52,18 @@ function updateUI() {
     el.classList.add(cssClass);
   }
   function removeCSSClass(el, cssClass){
-    el.classList.add(cssClass);
+    el.classList.remove(cssClass);
   }
-  function animateDrop(columnIndex, rowIndex, cssClass){   
-    let timeUnit = 200;
+  function animateDrop(rowIndex, columnIndex, cssClass){   
     for(let i = 0; i < rowIndex; i++){
-      let div =  document.getElementById(`square-${columnIndex}-${i}`);
+      let div =  document.getElementById(`square-${i}-${columnIndex}`);
       let waitTime = i * timeUnit;
-      setTimeout(addCSSClass, div, waitTime, cssClass);
-      setTimeout(removeCSSClass, div, waitTime + timeUnit, cssClass);
+      setTimeout(addCSSClass, waitTime, div, cssClass);
+      setTimeout(removeCSSClass, waitTime + timeUnit, div, cssClass);
     }
   }
 }
-//   function animateDrop(el){
-//     el.classList.add("red");
-//     function makeTransition() {
-//       el.classList.remove("top");
-//       el.classList.add("bottom");      
-//     }
-//     window.setTimeout(makeTransition, 10);    
-//   }
-// }
+
 window.addEventListener("DOMContentLoaded", (event) => {
   let player1Content = document.getElementById("player-1-name");
   let player2Content = document.getElementById("player-2-name");
@@ -102,8 +94,8 @@ window.addEventListener("DOMContentLoaded", (event) => {
   });
 
   clickTargets.addEventListener("click", (event) => {
-    let columnIndex = event.target.id.split("-")[1];
-    //console.log(columnIndex);
+    let columnIndex = Number(event.target.id.split("-")[1]);
+    columnToAnimate = columnIndex;
     if (game.isColumnFull(columnIndex)) {
       event.target.classList.add("full");
     } else {
