@@ -37,14 +37,41 @@ function updateUI() {
         div.className = "token-square";
       } else {
         if (cssClass !== "") {
-          div.classList.add(cssClass);
+          //animateDrop(div);
+          //div.classList.add(cssClass);
+          animateDrop(j, i, cssClass);
+          setTimeout(addCSSClass, 2000, div, cssClass);
         }
       }
     }
-    //}
   }
   gameNameDiv.innerHTML = game.getName();
+
+  function addCSSClass(el, cssClass){
+    el.classList.add(cssClass);
+  }
+  function removeCSSClass(el, cssClass){
+    el.classList.add(cssClass);
+  }
+  function animateDrop(columnIndex, rowIndex, cssClass){   
+    let timeUnit = 200;
+    for(let i = 0; i < rowIndex; i++){
+      let div =  document.getElementById(`square-${columnIndex}-${i}`);
+      let waitTime = i * timeUnit;
+      setTimeout(addCSSClass, div, waitTime, cssClass);
+      setTimeout(removeCSSClass, div, waitTime + timeUnit, cssClass);
+    }
+  }
 }
+//   function animateDrop(el){
+//     el.classList.add("red");
+//     function makeTransition() {
+//       el.classList.remove("top");
+//       el.classList.add("bottom");      
+//     }
+//     window.setTimeout(makeTransition, 10);    
+//   }
+// }
 window.addEventListener("DOMContentLoaded", (event) => {
   let player1Content = document.getElementById("player-1-name");
   let player2Content = document.getElementById("player-2-name");
