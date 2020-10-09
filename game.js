@@ -1,5 +1,6 @@
 import ColumnWinInspector from './column-win-inspector.js';
 import Column from './column.js';
+import DiagonalWinInspector from './diagonal-win-inspector.js';
 import RowWinInspector from './row-win-inspector.js';
 export default class Game {
   constructor(player1Name, player2Name) {
@@ -43,14 +44,20 @@ export default class Game {
         this.winnerNumber = 3;
       }
     }
-    this.checkForRowWin();
+    this.checkForRowOrDiagonalWin();
   }
 
-  checkForRowWin() {
+  checkForRowOrDiagonalWin() {
     for (let i = 0; i < 4; i++) {
       let fourColumns = this.columns.slice(i, i + 4);
       let rowWinInspector = new RowWinInspector(fourColumns);
       let result = rowWinInspector.inspect();
+      if (result === 1 || result === 2) {
+        this.winnerNumber = result;
+      }
+
+      let diagonalWinInspector = new DiagonalWinInspector(fourColumns);
+      result = diagonalWinInspector.inspect();
       if (result === 1 || result === 2) {
         this.winnerNumber = result;
       }
