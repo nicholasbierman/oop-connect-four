@@ -4,7 +4,7 @@ let game = undefined;
 let boardHolder = document.getElementById("board-holder");
 let gameNameDiv = document.getElementById("game-name");
 let clickTargets = document.getElementById("click-targets");
-
+let newGameJustStarted = false;
 function updateUI() {
   if (game === undefined) {
     boardHolder.classList.add("is-invisible");
@@ -24,19 +24,23 @@ function updateUI() {
     // if (game.isColumnFull(i)) {
     //   clickTargets.classList.add("full");
     // } else {
-      for (let j = 0; j < 6; j++) {
-        let token = game.getTokenAt(j, i);
-        let cssClass = "";
-        if (token === 1) {
-          cssClass = "red";
-        } else if (token === 2) {
-          cssClass = "black";
-        }
-        let div = document.getElementById(`square-${j}-${i}`);
+    for (let j = 0; j < 6; j++) {
+      let token = game.getTokenAt(j, i);
+      let cssClass = "";
+      if (token === 1) {
+        cssClass = "red";
+      } else if (token === 2) {
+        cssClass = "black";
+      }
+      let div = document.getElementById(`square-${j}-${i}`);
+      if (newGameJustStarted) {
+        div.className = "token-square";
+      } else {
         if (cssClass !== "") {
           div.classList.add(cssClass);
         }
       }
+    }
     //}
   }
   gameNameDiv.innerHTML = game.getName();
@@ -62,10 +66,12 @@ window.addEventListener("DOMContentLoaded", (event) => {
 
   newGameButton.addEventListener("click", (event) => {
     game = new Game(player1Content.value, player2Content.value);
+    newGameJustStarted = true;
     player1Content.value = "";
     player2Content.value = "";
     enableNewGameButton();
     updateUI();
+    newGameJustStarted = false;
   });
 
   clickTargets.addEventListener("click", (event) => {
