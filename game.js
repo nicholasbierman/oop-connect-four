@@ -1,5 +1,6 @@
 import ColumnWinInspector from './column-win-inspector.js';
 import Column from './column.js';
+import RowWinInspector from './row-win-inspector.js';
 export default class Game {
   constructor(player1Name, player2Name) {
     this.player1Name = player1Name;
@@ -42,16 +43,28 @@ export default class Game {
         this.winnerNumber = 3;
       }
     }
+    this.checkForRowWin();
+  }
+
+  checkForRowWin() {
+    for (let i = 0; i < 4; i++) {
+      let fourColumns = this.columns.slice(i, i + 4);
+      let rowWinInspector = new RowWinInspector(fourColumns);
+      let result = rowWinInspector.inspect();
+      if (result === 1 || result === 2) {
+        this.winnerNumber = result;
+      }
+    }
   }
 
   getName() {
     let gameStatus = `${this.player1Name} vs. ${this.player2Name}`;
     if(this.winnerNumber === 1) {
       gameStatus = `${this.player1Name} wins!`;
-      alert(gameStatus);
+      setTimeout(alert, 200, gameStatus);
     } else if(this.winnerNumber === 2){
       gameStatus = `${this.player2Name} wins!`;
-      alert(gameStatus);
+      setTimeout(alert, 200, gameStatus);
     }
 
     return gameStatus;

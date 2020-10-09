@@ -10,7 +10,7 @@ function updateUI() {
     boardHolder.classList.add("is-invisible");
   } else {
     boardHolder.classList.remove("is-invisible");
-    gameNameDiv.innerHTML = game.getName();
+    // gameNameDiv.innerHTML = game.getName();
   }
   let currentPlayer = game.currentPlayer;
   if (currentPlayer === 1) {
@@ -39,6 +39,7 @@ function updateUI() {
       }
     //}
   }
+  gameNameDiv.innerHTML = game.getName();
 }
 window.addEventListener("DOMContentLoaded", (event) => {
   let player1Content = document.getElementById("player-1-name");
