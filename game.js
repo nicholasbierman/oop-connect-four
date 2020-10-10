@@ -85,4 +85,10 @@ export default class Game {
 
     return result;
   }
+
+  restoreSavedTokens(savedTokens){
+    for(let i = 0; i < savedTokens.length; i++){
+      this.columns[i].tokens = savedTokens[i];
+    }
+  }
 }

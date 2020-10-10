@@ -38,11 +38,10 @@ export class GameJSONDeserializer {
     let jsonString = localStorage.getItem("gameStatus");
     let object = JSON.parse(jsonString);
     if (object !== null) {
-      console.log(object);
-      this.tokenArray = object.tokenArray;
-      this.playerNames = object.playerNames;
-      this.currentPlayer = object.currentPlayer;
-      this.winnerNumber = object.winnerNumber;
+      this.tokenArray = object[0];
+      this.playerNames = object[1];
+      this.currentPlayer = object[2];
+      this.winnerNumber = object[3];
     }
     
   }

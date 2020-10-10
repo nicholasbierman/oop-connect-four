@@ -14,7 +14,6 @@ function updateUI() {
     boardHolder.classList.add("is-invisible");
   } else {
     boardHolder.classList.remove("is-invisible");
-    // gameNameDiv.innerHTML = game.getName();
   }
   let currentPlayer = game.currentPlayer;
   if (currentPlayer === 1) {
@@ -39,11 +38,15 @@ function updateUI() {
         div.className = "token-square";
       } else {
         if (cssClass !== "") {
-          if (i === columnToAnimate && j < rowToAnimate) {
-            animateDrop(j, i, cssClass);
-            rowToAnimate = j;
+          if(newGameJustStarted){
+            addCSSClass(div, cssClass);
+          } else {
+            if (i === columnToAnimate && j < rowToAnimate) {
+              animateDrop(j, i, cssClass);
+              rowToAnimate = j;
+            }
+            setTimeout(addCSSClass, j * timeUnit, div, cssClass);
           }
-          setTimeout(addCSSClass, j * timeUnit, div, cssClass);
         }
       }
     }
@@ -71,15 +74,12 @@ window.addEventListener("DOMContentLoaded", (event) => {
   gameJsonDeserializer.deserialize();
   let player1Content = document.getElementById("player-1-name");
   let player2Content = document.getElementById("player-2-name");
-  console.log(gameJsonDeserializer);
   let newGameButton = document.getElementById("new-game");
-  if (gameJsonDeserializer.playerNames[0] !== "") {
-    player1Content.value = gameJsonDeserializer.playerNames[0];
+  if(gameJsonDeserializer.playerNames !== undefined){
+    startGame(false);
   }
-  if (gameJsonDeserializer.playerNames[1] !== "") {
-    player2Content.value = gameJsonDeserializer.playerNames[1];
-  }
-  function enableNewGameButton() {
+
+  function checkToEnableOrDisableNewGameButton() {
     if (player1Content.value !== "" && player2Content.value !== "") {
       newGameButton.disabled = false;
     } else {
@@ -87,30 +87,36 @@ window.addEventListener("DOMContentLoaded", (event) => {
     }
   }
   player1Content.addEventListener("keyup", (evt) => {
-    enableNewGameButton();
+    checkToEnableOrDisableNewGameButton();
   });
   player2Content.addEventListener("keyup", (evt) => {
-    enableNewGameButton();
+    checkToEnableOrDisableNewGameButton();
   });
+  
 
-  newGameButton.addEventListener("click", (event) => {
+  function startGame(newGame){
     game = new Game(player1Content.value, player2Content.value);
-    console.log(retrievedGame);
-    if (retrievedGame !== null && retrievedGame !== undefined) {
-      game.columns = retrievedGame.tokenArray;
-      console.log(game.columns);
-      game.player1Name = retrievedGame.playerNames[0];
-      game.player2Name = retrievedGame.playerNames[1];
-      game.currentPlayer = retrievedGame.currentPlayer;
-      game.winnerNumber = retrievedGame.winnerNumber;
+    if(!newGame){
+      if (gameJsonDeserializer !== null && gameJsonDeserializer !== undefined && (gameJsonDeserializer.playerNames !== undefined)) {
+        if(gameJsonDeserializer.winnerNumber === 0){ //only restore the game if no winner or not a tie
+          game.restoreSavedTokens(gameJsonDeserializer.tokenArray);
+          game.player1Name = gameJsonDeserializer.playerNames[0];
+          game.player2Name = gameJsonDeserializer.playerNames[1];
+          game.currentPlayer = gameJsonDeserializer.currentPlayer;
+          game.winnerNumber = gameJsonDeserializer.winnerNumber;
+        }
+      }
     }
 
-    newGameJustStarted = true;
     player1Content.value = "";
     player2Content.value = "";
-    enableNewGameButton();
+    checkToEnableOrDisableNewGameButton();
     updateUI();
-    newGameJustStarted = false;
+  }
+  newGameButton.addEventListener("click", (event) => {
+    newGameJustStarted = true;
+    startGame(true);
+    newGameJustStarted = false;    
   });
 
   clickTargets.addEventListener("click", (event) => {

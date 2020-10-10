@@ -11,7 +11,6 @@ export default class Column {
       }
     }
   }
-  // returns null, 1 or 2
 
   isFull(){
     return this.tokens.every(ele => ele !== null);
