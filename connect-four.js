@@ -10,7 +10,7 @@ let columnToAnimate;
 let timeUnit = 200;
 
 function updateUI() {
-  if (game === undefined) {
+  if (game === undefined || game.player1Name === "") {
     boardHolder.classList.add("is-invisible");
   } else {
     boardHolder.classList.remove("is-invisible");
