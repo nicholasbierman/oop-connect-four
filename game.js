@@ -17,7 +17,6 @@ export default class Game {
   }
 
   getTokenAt(rowIndex, columnIndex) {
-    //if(rowIndex >= this.tokens.length) return null;
     return this.columns[columnIndex].tokens[rowIndex];
   }
 
