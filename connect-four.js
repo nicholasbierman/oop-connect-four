@@ -6,6 +6,7 @@ let boardHolder = document.getElementById("board-holder");
 let gameNameDiv = document.getElementById("game-name");
 let clickTargets = document.getElementById("click-targets");
 let newGameJustStarted = false;
+let gameIsRestoredFromLocalStoraged = false;
 let columnToAnimate;
 let timeUnit = 200;
 
@@ -38,7 +39,7 @@ function updateUI() {
         div.className = "token-square";
       } else {
         if (cssClass !== "") {
-          if(newGameJustStarted){
+          if(gameIsRestoredFromLocalStoraged){
             addCSSClass(div, cssClass);
           } else {
             if (i === columnToAnimate && j < rowToAnimate) {
@@ -52,6 +53,11 @@ function updateUI() {
     }
   }
   gameNameDiv.innerHTML = game.getName();
+  if(gameNameDiv.innerHTML !== `${game.player1Name} vs. ${game.player2Name}`)
+  {
+    setTimeout(alert, 1000, gameNameDiv.innerHTML);
+  }
+
 
   function addCSSClass(el, cssClass) {
     el.classList.add(cssClass);
@@ -75,8 +81,10 @@ window.addEventListener("DOMContentLoaded", (event) => {
   let player1Content = document.getElementById("player-1-name");
   let player2Content = document.getElementById("player-2-name");
   let newGameButton = document.getElementById("new-game");
-  if(gameJsonDeserializer.playerNames !== undefined){
-    startGame(false);
+  if(gameJsonDeserializer.winnerNumber !== undefined && gameJsonDeserializer.winnerNumber === 0){
+    gameIsRestoredFromLocalStoraged = true;
+    startGame();
+    gameIsRestoredFromLocalStoraged = false;
   }
 
   function checkToEnableOrDisableNewGameButton() {
@@ -94,9 +102,9 @@ window.addEventListener("DOMContentLoaded", (event) => {
   });
   
 
-  function startGame(newGame){
+  function startGame(){
     game = new Game(player1Content.value, player2Content.value);
-    if(!newGame){
+    if(!newGameJustStarted){
       if (gameJsonDeserializer !== null && gameJsonDeserializer !== undefined && (gameJsonDeserializer.playerNames !== undefined)) {
         if(gameJsonDeserializer.winnerNumber === 0){ //only restore the game if no winner or not a tie
           game.restoreSavedTokens(gameJsonDeserializer.tokenArray);
@@ -121,12 +129,14 @@ window.addEventListener("DOMContentLoaded", (event) => {
 
   clickTargets.addEventListener("click", (event) => {
     let columnIndex = Number(event.target.id.split("-")[1]);
-    columnToAnimate = columnIndex;
-    if (game.isColumnFull(columnIndex)) {
-      event.target.classList.add("full");
-    } else {
-      game.playInColumn(columnIndex);
-      event.target.classList.remove("full");
+    if(columnIndex >= 0 && columnIndex <= 6){
+      columnToAnimate = columnIndex;
+      if (game.isColumnFull(columnIndex)) {
+        event.target.classList.add("full");
+      } else {
+        game.playInColumn(columnIndex);
+        event.target.classList.remove("full");
+      }
     }
     updateUI();
     let gameJsonSerializer = new GameJSONSerializer(game);

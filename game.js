@@ -29,22 +29,19 @@ export default class Game {
     }
     this.columns[columnIndex].add(this.currentPlayer);
     checkForTie.bind(this)();
-    this.winnerNumber = this.columnInpectors[columnIndex].inspect();
-    console.log(this.winnerNumber)
+    let result = this.columnInpectors[columnIndex].inspect();
+    if(result !== 0) this.winnerNumber = result;
+    this.checkForRowOrDiagonalWin();
 
     function checkForTie(){
       let everythingIsFull = true;
       for(let i = 0; i < this.columns.length; i++){
         if(!this.columns[i].isFull()) everythingIsFull = false;
       }
-      //if(this.columns.every(ele => {ele.isFull()})){
       if(everythingIsFull){
-        console.log(`${this.player1Name} ties with ${this.player2Name}`);
-        alert(`${this.player1Name} ties with ${this.player2Name}`);
         this.winnerNumber = 3;
       }
     }
-    this.checkForRowOrDiagonalWin();
   }
 
   checkForRowOrDiagonalWin() {
@@ -68,12 +65,11 @@ export default class Game {
     let gameStatus = `${this.player1Name} vs. ${this.player2Name}`;
     if(this.winnerNumber === 1) {
       gameStatus = `${this.player1Name} wins!`;
-      setTimeout(alert, 200, gameStatus);
     } else if(this.winnerNumber === 2){
       gameStatus = `${this.player2Name} wins!`;
-      setTimeout(alert, 200, gameStatus);
+    } else if(this.winnerNumber === 3){
+      gameStatus = `${this.player1Name} ties with ${this.player2Name}`;
     }
-
     return gameStatus;
   }
 

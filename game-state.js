@@ -15,14 +15,13 @@ export class GameJSONSerializer {
     }
     playerNames[0] = this.game.player1Name;
     playerNames[1] = this.game.player2Name;
-    let jsonString = "";
-    jsonString = JSON.stringify([
+    let jsonString = JSON.stringify([
       tokenArray,
       playerNames,
       this.game.currentPlayer,
       this.game.winnerNumber,
     ]);
-    localStorage.setItem("gameStatus", jsonString);
+    localStorage.setItem("gameState", jsonString);
   }
 }
 
@@ -35,7 +34,7 @@ export class GameJSONDeserializer {
   }
 
   deserialize() {
-    let jsonString = localStorage.getItem("gameStatus");
+    let jsonString = localStorage.getItem("gameState");
     let object = JSON.parse(jsonString);
     if (object !== null) {
       this.tokenArray = object[0];
